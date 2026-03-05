@@ -1,0 +1,18 @@
+<button matFab extended [style.margin-right]="'5px'" (click)="onCreate()">
+  <mat-icon>add</mat-icon>
+  Add new
+</button>
+@if(this.selectedRecipes().length > 0){
+<button matFab extended (click)="onDeleteMany()">
+  <mat-icon>remove</mat-icon>
+  Remove selected
+</button>
+
+{{ this.selectedRecipes().length }} selected }
+<mat-grid-list cols="2" rowHeight="3:1">
+  @for(recipe of recipes$ | async; track recipe.id){
+  <mat-grid-tile
+    ><app-recipe-card [recipe]="recipe" (selectAction)="onSelect($event)"></app-recipe-card
+  ></mat-grid-tile>
+  }
+</mat-grid-list>

@@ -1,0 +1,11 @@
+<div style="width: 100%; justify-items: end">
+  <button matButton="tonal" (click)="onLogin()">
+    {{ isLoggedIn ? 'Logout' : 'Login' }}
+  </button>
+</div>
+<div style="width: 100%; flex: auto; justify-items: center">
+  <div style="flex: auto; flex-direction: column; justify-items: center; width: 60%">
+    <h1>{{ title() }}</h1>
+    <router-outlet></router-outlet>
+  </div>
+</div>

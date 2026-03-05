@@ -1,0 +1,75 @@
+<!-- we can connect our built angular form with UI by setting the formGroup directive, then for each
+control we need to set the formControlName -->
+<form [formGroup]="recipeForm" class="recipe-form" (ngSubmit)="onSubmit()">
+  <div class="form-row">
+    <mat-form-field appearance="outline" class="flex-item">
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Pancake" formControlName="name" />
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="flex-item">
+      @let recipeCodeControl = recipeForm.get("recipeCode");
+      <mat-label>Code</mat-label>
+      <!-- by setting formControlName directive, the input's value is automatically synced with the form -->
+      <input matInput placeholder="Pancake" formControlName="recipeCode" />
+      @if(!recipeCodeControl?.valid){
+      <mat-error>
+        {{ recipeCodeControl!.errors!['recipeCode'] ?? 'Recipe code is required' }}
+      </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="flex-item">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        placeholder="Soft and sweet pancake"
+        formControlName="description"
+      ></textarea>
+    </mat-form-field>
+  </div>
+
+  <mat-divider>Ingredients</mat-divider>
+  <span>Total ingredients: {{ totalIngredients() }}</span>
+
+  @for (ingredient of ingredientFormGroups; track ingredient.get('id')!.value) { @let ingredientId =
+  ingredient.get('id')!.value;
+  <!-- in the form array section the form group is the current form group of the form array -->
+  <div class="form-row" [formGroup]="ingredient">
+    <mat-form-field appearance="outline" class="flex-item">
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Flour" formControlName="name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="flex-item">
+      <mat-label>Quantity</mat-label>
+      <input matInput placeholder="100" formControlName="quantity" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="flex-item">
+      <mat-label>Unit of measurement</mat-label>
+      <mat-select formControlName="unitOfMeasurement">
+        @for (unitOfMeasurement of unitOfMeasurements; track $index) {
+        <mat-option [value]="unitOfMeasurement">
+          {{ unitOfMeasurement }}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button type="button" mat-icon-button color="warn" (click)="removeIngredient(ingredientId)">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+  }
+  <button type="button" mat-fab extended (click)="addIngredient()">
+    <mat-icon>add</mat-icon>
+    Add new
+  </button>
+  <div class="form-actions">
+    <button type="button" mat-stroked-button (click)="onCancel()">Cancel</button>
+    <button type="submit" mat-raised-button>Submit</button>
+    @if(recipeForm.touched && !recipeForm.valid && recipeForm!.errors!['different']){
+    <mat-error>{{ recipeForm.errors!['different']! }}</mat-error>
+    }
+  </div>
+</form>
